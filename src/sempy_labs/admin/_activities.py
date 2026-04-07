@@ -172,6 +172,7 @@ def list_activity_events(
     else:
         return response_json
 
+
 @log
 def list_activity_events_multiple_days(
     start_day: str,
@@ -212,16 +213,16 @@ def list_activity_events_multiple_days(
     max_per_slot = 200
     slot_seconds = 60
     namespace = globals()
-    
+
     # Normalize start_day
     start_date = datetime.strptime(start_day, "%Y-%m-%d").date()
 
     # Build the list of tasks
     for i in range(num_days):
-        day = start_date + timedelta(days = i * inc_days)
+        day = start_date + timedelta(days=i * inc_days)
 
         start_iso = day.strftime("%Y-%m-%dT00:00:00.000Z")
-        end_iso   = day.strftime("%Y-%m-%dT23:59:59.999Z")
+        end_iso = day.strftime("%Y-%m-%dT23:59:59.999Z")
 
         parameters_list.append(
             {
@@ -233,8 +234,8 @@ def list_activity_events_multiple_days(
             }
         )
 
-    results = (
-        execute_in_timeslots(func_name, parameters_list, max_per_slot, slot_seconds, namespace)
+    results = execute_in_timeslots(
+        func_name, parameters_list, max_per_slot, slot_seconds, namespace
     )
 
     return results

@@ -2883,6 +2883,7 @@ def get_model_id(item_id: UUID, prefix: str = None, headers: dict = None):
 
     return response.json().get("model", {}).get("id")
 
+
 def _resolve_function(func_name: str, namespace):
     """
     Resolve a function name string into an actual callable/function object.
@@ -2908,7 +2909,9 @@ def _resolve_function(func_name: str, namespace):
             return namespace[name]
         else:
             # Fail if not found
-            raise ValueError(f"{icons.red_dot} Function '{func_name}' not found in namespace!")
+            raise ValueError(
+                f"{icons.red_dot} Function '{func_name}' not found in namespace!"
+            )
     else:
         # ---------------------------------------------------------
         # Case 2: dotted path (object.attribute.attribute...)
@@ -2922,6 +2925,7 @@ def _resolve_function(func_name: str, namespace):
         else:
             # Fail if not found
             raise ValueError(f"{icons.red_dot} '{module_name}' not found in namespace!")
+
 
 def _count_rows(obj):
     """
@@ -2973,6 +2977,7 @@ def _count_rows(obj):
         # Optional: enable this for debugging
         # print(f"count_rows error: {e} (type={type(obj)})")
         return 1
+
 
 def _deep_merge(a, b):
     """
@@ -3031,8 +3036,11 @@ def _deep_merge(a, b):
     # Anything else → b wins
     return b
 
+
 @log
-def execute_in_timeslots(func_name, parameters_list, max_per_slot, slot_seconds, namespace):
+def execute_in_timeslots(
+    func_name, parameters_list, max_per_slot, slot_seconds, namespace
+):
     """
     Execute a function repeatedly with rate limiting, merging results and
     logging progress.
@@ -3047,9 +3055,9 @@ def execute_in_timeslots(func_name, parameters_list, max_per_slot, slot_seconds,
     Returns the merged result of calling the function func_name with the parameters in the parameters_list.
     """
 
-    results = None          # Accumulated DataFrame OR merged dict
-    results_dict = []       # Store raw dict results
-    total_rows = 0          # Total number of rows returned across all calls
+    results = None  # Accumulated DataFrame OR merged dict
+    results_dict = []  # Store raw dict results
+    total_rows = 0  # Total number of rows returned across all calls
 
     # Initialize sliding‑window rate limiting
     window_start = time.time()
@@ -3074,7 +3082,9 @@ def execute_in_timeslots(func_name, parameters_list, max_per_slot, slot_seconds,
 
         elif calls_in_window > max_per_slot:
             sleep_time = slot_seconds - elapsed
-            print(f"{icons.in_progress} Rate limit reached → sleeping {sleep_time:.2f}s")
+            print(
+                f"{icons.in_progress} Rate limit reached → sleeping {sleep_time:.2f}s"
+            )
             time.sleep(sleep_time)
             window_start = time.time()
             elapsed = time.time() - window_start
@@ -3085,7 +3095,11 @@ def execute_in_timeslots(func_name, parameters_list, max_per_slot, slot_seconds,
         print(f"Calls in current window: {calls_in_window}/{max_per_slot}")
 
         try:
-            call_str = f"{func_name}(" + ", ".join([f"{k}={repr(v)}" for k, v in params.items()]) + ")"
+            call_str = (
+                f"{func_name}("
+                + ", ".join([f"{k}={repr(v)}" for k, v in params.items()])
+                + ")"
+            )
             print(f"Executing now: {call_str}")
 
             # Execute the resolved function
