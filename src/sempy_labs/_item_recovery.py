@@ -91,7 +91,7 @@ def resolve_recoverable_item_id(
     item_id = df_filt["Item Id"].iloc[0]
     item_type = df_filt["Item Type"].iloc[0]
 
-    return workspace_name, workspace_id, item_id, item_type
+    return (workspace_name, workspace_id, item_id, item_type)
 
 
 @log
