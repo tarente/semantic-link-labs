@@ -3046,7 +3046,7 @@ def execute_in_timeslots(
     logging progress.
 
     - Resolves the target function once from the given namespace.
-    - Processes each task as a separate call with arguments in tasks.
+    - Processes each parameters as a separate call with arguments in parameters_list.
     - Enforces a sliding‑window limit: max_per_slot calls per slot_seconds.
     - Sleeps or resets the window when limits are reached.
     - Merges results using deep_merge and counts rows via count_rows.
