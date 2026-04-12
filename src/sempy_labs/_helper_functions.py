@@ -1637,14 +1637,13 @@ def pagination(client, response):
         try:
             response = client.get(continuation_uri)
 
-        except Exception as e:
+        except FabricHTTPException as e:
             # Handle FabricHTTPException (404)
-            if hasattr(e, "response") and e.response is not None:
-                if e.response.status_code == 404:
-                    return responses
+            if e.status_code == 404:
+                return responses
 
             # If it's something else, re-raise
-            raise FabricHTTPException(e.response) if hasattr(e, "response") else e
+            raise FabricHTTPException(response)
 
     return responses
 
